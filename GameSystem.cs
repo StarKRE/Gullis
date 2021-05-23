@@ -149,7 +149,7 @@ namespace GameElements
 
         #endregion
 
-        public bool AddElement(IGameElement element)
+        public bool RegisterElement(IGameElement element)
         {
             var type = element.GetType();
             if (this.registeredElementMap.ContainsKey(type))
@@ -163,7 +163,7 @@ namespace GameElements
             return true;
         }
 
-        public bool RemoveElement(IGameElement element)
+        public bool UnregisterElement(IGameElement element)
         {
             var type = element.GetType();
             if (!this.registeredElementMap.Remove(type))
