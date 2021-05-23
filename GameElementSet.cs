@@ -11,12 +11,12 @@ namespace GameElements
         /// <summary>
         ///     <para>Adds an element into the set.</para>
         /// </summary>
-        bool AddElement(IGameElement element);
+        bool RegisterElement(IGameElement element);
 
         /// <summary>
         ///     <para>Removes an element into the set.</para>
         /// </summary>
-        bool RemoveElement(IGameElement element);
+        bool UnregisterElement(IGameElement element);
 
         /// <summary>
         ///     <para>Checks an element into the set.</para>
@@ -33,7 +33,7 @@ namespace GameElements
             this.registeredElements = new HashSet<IGameElement>();
         }
 
-        public virtual bool AddElement(IGameElement element)
+        public virtual bool RegisterElement(IGameElement element)
         {
             if (!this.registeredElements.Add(element))
             {
@@ -45,7 +45,7 @@ namespace GameElements
             return true;
         }
 
-        public virtual bool RemoveElement(IGameElement element)
+        public virtual bool UnregisterElement(IGameElement element)
         {
             if (this.registeredElements.Remove(element))
             {
