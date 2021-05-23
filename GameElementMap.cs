@@ -12,12 +12,12 @@ namespace GameElements
         /// <summary>
         ///     <para>Adds an element into the dictionary.</para>
         /// </summary>
-        bool AddElement(K key, V element);
+        bool RegisterElement(K key, V element);
 
         /// <summary>
         ///     <para>Removes an element from the dictionary.</para>
         /// </summary>
-        bool RemoveElement(K key);
+        bool UnregisterElement(K key);
 
         /// <summary>
         ///     <para>Returns an element.</para>
@@ -39,7 +39,7 @@ namespace GameElements
             this.registeredElementMap = new Dictionary<K, V>();
         }
         
-        public bool AddElement(K key, V element)
+        public bool RegisterElement(K key, V element)
         {
             if (this.registeredElementMap.ContainsKey(key))
             {
@@ -52,7 +52,7 @@ namespace GameElements
             return true;
         }
 
-        public bool RemoveElement(K key)
+        public bool UnregisterElement(K key)
         {
             if (!this.registeredElementMap.ContainsKey(key))
             {
