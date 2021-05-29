@@ -11,7 +11,7 @@ namespace GameElements
     public interface IGameSystem : IGameObserver, IGameStateable, IGameElementLayer
     {
     }
-    
+
     public class GameSystem : MonoBehaviour, IGameSystem
     {
         #region Event
@@ -51,14 +51,19 @@ namespace GameElements
             {
                 return;
             }
-            
+
             this.State = GameState.PREPARE;
             foreach (var element in this)
             {
                 element.OnPrepareGame(sender);
             }
-            
+
+            this.OnPrepareGame(sender);
             this.OnGamePrepared?.Invoke(sender);
+        }
+
+        protected virtual void OnPrepareGame(object sender)
+        {
         }
 
         public void ReadyGame(object sender)
@@ -67,14 +72,19 @@ namespace GameElements
             {
                 return;
             }
-            
+
             this.State = GameState.READY;
             foreach (var element in this)
             {
                 element.OnReadyGame(sender);
             }
-            
+
+            this.OnReadyGame(this);
             this.OnGameReady?.Invoke(sender);
+        }
+
+        protected virtual void OnReadyGame(object sender)
+        {
         }
 
         public void StartGame(object sender)
@@ -83,12 +93,19 @@ namespace GameElements
             {
                 return;
             }
-            
+
             this.State = GameState.PLAY;
             foreach (var element in this)
             {
                 element.OnStartGame(sender);
             }
+            
+            this.OnStartGame(sender);
+            this.OnGameStarted?.Invoke(sender);
+        }
+
+        protected virtual void OnStartGame(object sender)
+        {
         }
 
         public void PauseGame(object sender)
@@ -97,12 +114,19 @@ namespace GameElements
             {
                 return;
             }
-            
+
             this.State = GameState.PAUSE;
             foreach (var element in this)
             {
                 element.OnPauseGame(sender);
             }
+            
+            this.OnPauseGame(sender);
+            this.OnGamePaused?.Invoke(sender);
+        }
+
+        protected virtual void OnPauseGame(object sender)
+        {
         }
 
         public void ResumeGame(object sender)
@@ -111,12 +135,19 @@ namespace GameElements
             {
                 return;
             }
-            
+
             this.State = GameState.PLAY;
             foreach (var element in this)
             {
                 element.OnResumeGame(sender);
             }
+            
+            this.OnResumeGame();
+            this.OnGameResumed?.Invoke(sender);
+        }
+
+        protected virtual void OnResumeGame()
+        {
         }
 
         public void FinishGame(object sender)
@@ -125,12 +156,19 @@ namespace GameElements
             {
                 return;
             }
-            
+
             this.State = GameState.FINISH;
             foreach (var element in this)
             {
                 element.OnFinishGame(sender);
             }
+            
+            this.OnFinishGame(sender);
+            this.OnGameFinished?.Invoke(sender);
+        }
+
+        protected virtual void OnFinishGame(object sender)
+        {
         }
 
         public void DestroyGame(object sender)
@@ -139,12 +177,18 @@ namespace GameElements
             {
                 return;
             }
-            
+
             this.State = GameState.DESTROY;
             foreach (var element in this)
             {
                 element.OnDestroyGame(sender);
             }
+
+            this.OnDestroyGame(sender);
+        }
+
+        protected virtual void OnDestroyGame(object sender)
+        {
         }
 
         #endregion
