@@ -41,7 +41,7 @@ namespace GameElements
             }
 
             element.OnRegistered(this, this.GameSystem);
-            GameElementUtils.UpdateElementState(element, this);
+            GameElementUtils.SyncState(element, this.State, this);
             return true;
         }
 

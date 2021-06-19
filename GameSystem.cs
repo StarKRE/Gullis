@@ -59,7 +59,11 @@ namespace GameElements
             }
 
             this.OnPrepareGame(sender);
-            this.OnGamePrepared?.Invoke(sender);
+
+            if (this.OnGamePrepared != null)
+            {
+                this.OnGamePrepared.Invoke(sender);
+            }
         }
 
         protected virtual void OnPrepareGame(object sender)
@@ -80,7 +84,11 @@ namespace GameElements
             }
 
             this.OnReadyGame(this);
-            this.OnGameReady?.Invoke(sender);
+
+            if (this.OnGameReady != null)
+            {
+                this.OnGameReady.Invoke(sender);
+            }
         }
 
         protected virtual void OnReadyGame(object sender)
@@ -101,7 +109,11 @@ namespace GameElements
             }
             
             this.OnStartGame(sender);
-            this.OnGameStarted?.Invoke(sender);
+
+            if (this.OnGameStarted != null)
+            {
+                this.OnGameStarted.Invoke(sender);
+            }
         }
 
         protected virtual void OnStartGame(object sender)
@@ -122,7 +134,11 @@ namespace GameElements
             }
             
             this.OnPauseGame(sender);
-            this.OnGamePaused?.Invoke(sender);
+
+            if (this.OnGamePaused != null)
+            {
+                this.OnGamePaused.Invoke(sender);
+            }
         }
 
         protected virtual void OnPauseGame(object sender)
@@ -143,7 +159,11 @@ namespace GameElements
             }
             
             this.OnResumeGame();
-            this.OnGameResumed?.Invoke(sender);
+
+            if (this.OnGameResumed != null)
+            {
+                this.OnGameResumed.Invoke(sender);
+            }
         }
 
         protected virtual void OnResumeGame()
@@ -164,7 +184,11 @@ namespace GameElements
             }
             
             this.OnFinishGame(sender);
-            this.OnGameFinished?.Invoke(sender);
+
+            if (this.OnGameFinished != null)
+            {
+                this.OnGameFinished.Invoke(sender);
+            }
         }
 
         protected virtual void OnFinishGame(object sender)
@@ -203,7 +227,7 @@ namespace GameElements
 
             this.registeredElementMap.Add(type, element);
             element.OnRegistered(this, this);
-            GameElementUtils.UpdateElementState(element, this);
+            GameElementUtils.SyncState(element, this.State, this);
             return true;
         }
 
@@ -219,20 +243,21 @@ namespace GameElements
             return true;
         }
 
-        public T GetElement<T>() where T : IGameElement
+        public T GetElement<T>()
         {
-            return GameElementUtils.Find<T, IGameElement>(this.registeredElementMap);
+            return (T) GameElementUtils.Find<T, IGameElement>(this.registeredElementMap);
         }
 
         public bool TryGetElement<T>(out T element)
         {
-            if (GameElementUtils.TryFind(this.registeredElementMap, typeof(T), out var result))
+            IGameElement result;
+            if (GameElementUtils.TryFind(this.registeredElementMap, typeof(T), out result))
             {
                 element = (T) result;
                 return true;
             }
 
-            element = default;
+            element = default(T);
             return false;
         }
 

@@ -5,40 +5,39 @@ namespace GameElements
 {
     public static class GameElementUtils
     {
-        public static void UpdateElementState(IGameElement element, IGameStateable parent)
+        public static void SyncState(IGameElement element, GameState targetState, object sender)
         {
-            var parentState = parent.State;
-            if (parentState >= GameState.FINISH)
+            if (targetState >= GameState.FINISH)
             {
                 return;
             }
             
-            if (parentState < GameState.PREPARE)
+            if (targetState < GameState.PREPARE)
             {
                 return;
             }
 
-            element.OnPrepareGame(parent);
+            element.OnPrepareGame(sender);
 
-            if (parentState >= GameState.READY)
+            if (targetState >= GameState.READY)
             {
-                element.OnReadyGame(parent);
+                element.OnReadyGame(sender);
             }
 
-            if (parentState >= GameState.PLAY)
+            if (targetState >= GameState.PLAY)
             {
-                element.OnStartGame(parent);
+                element.OnStartGame(sender);
             }
 
-            if (parentState == GameState.PAUSE)
+            if (targetState == GameState.PAUSE)
             {
-                element.OnPauseGame(parent);
+                element.OnPauseGame(sender);
             }
         }
         
-        public static R Find<R, T>(Dictionary<Type, T> map) where R : T
+        public static T Find<R, T>(Dictionary<Type, T> map)
         {
-            return (R) Find(map, typeof(R));
+            return Find(map, typeof(R));
         }
 
         public static T Find<T>(Dictionary<Type, T> map, Type requiredType)
@@ -78,7 +77,7 @@ namespace GameElements
                 }
             }
 
-            item = default;
+            item = default(T);
             return false;
         }
     }

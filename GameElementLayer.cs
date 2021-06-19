@@ -22,7 +22,7 @@ namespace GameElements
         /// <summary>
         ///     <para>Returns an element of "T".</para>
         /// </summary>
-        T GetElement<T>() where T : IGameElement;
+        T GetElement<T>();
 
         /// <summary>
         ///     <para>Tries to get an element of "T".</para>
@@ -49,7 +49,7 @@ namespace GameElements
 
             this.registeredElementMap.Add(type, element);
             element.OnRegistered(this, this.GameSystem);
-            GameElementUtils.UpdateElementState(element, this);
+            GameElementUtils.SyncState(element, this.State, this);
             return true;
         }
         
@@ -65,20 +65,21 @@ namespace GameElements
             return true;
         }
 
-        public T GetElement<T>() where T : IGameElement
+        public T GetElement<T>()
         {
-            return GameElementUtils.Find<T, IGameElement>(this.registeredElementMap);
+            return (T) GameElementUtils.Find<T, IGameElement>(this.registeredElementMap);
         }
 
         public bool TryGetElement<T>(out T element)
         {
-            if (GameElementUtils.TryFind(this.registeredElementMap, typeof(T), out var result))
+            IGameElement result;
+            if (GameElementUtils.TryFind(this.registeredElementMap, typeof(T), out result))
             {
                 element = (T) result;
                 return true;
             }
 
-            element = default;
+            element = default(T);
             return false;
         }
 

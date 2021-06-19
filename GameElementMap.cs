@@ -22,12 +22,12 @@ namespace GameElements
         /// <summary>
         ///     <para>Returns an element.</para>
         /// </summary>
-        T GetElement<T>(K key) where T : V;
+        T GetElement<T>(K key);
 
         /// <summary>
         ///     <para>Tries to get an element from the dictionary.</para>
         /// </summary>
-        bool TryGetElement<T>(K key, out T element) where T : V;
+        bool TryGetElement<T>(K key, out T element);
     }
 
     public abstract class GameElementMap<K, V> : GameElementGroup, IGameElementMap<K, V> where V : IGameElement
@@ -48,7 +48,7 @@ namespace GameElements
 
             this.registeredElementMap.Add(key, element);
             element.OnRegistered(this, this.GameSystem);
-            GameElementUtils.UpdateElementState(element, this);
+            GameElementUtils.SyncState(element, this.State, this);
             return true;
         }
 
@@ -65,20 +65,22 @@ namespace GameElements
             return true;
         }
 
-        public T GetElement<T>(K key) where T : V
+        public T GetElement<T>(K key)
         {
-            return (T) this.registeredElementMap[key];
+            object registeredElement = this.registeredElementMap[key];
+            return (T) registeredElement;
         }
 
-        public bool TryGetElement<T>(K key, out T element) where T : V
+        public bool TryGetElement<T>(K key, out T element)
         {
-            if (this.registeredElementMap.TryGetValue(key, out var result))
+            V result;
+            if (this.registeredElementMap.TryGetValue(key, out result))
             {
-                element = (T) result;
+                element = (T) (object) result;
                 return true;
             }
 
-            element = default;
+            element = default(T);
             return false;
         }
 
